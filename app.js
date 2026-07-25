@@ -38,3 +38,22 @@ const products = [
   stock: 0
 }
   ];
+const stockElement = document.getElementById("stock");
+const bestSellerElement = document.getElementById("bestSeller");
+const restockElement = document.getElementById("restock");
+const profitElement = document.getElementById("profit");
+
+function updateDashboard() {
+  let totalStock = 0;
+
+  products.forEach(product => {
+    totalStock += product.stock;
+  });
+
+  stockElement.textContent = totalStock;
+  bestSellerElement.textContent = "-";
+  restockElement.textContent = "Ingen";
+  profitElement.textContent = "0 kr.";
+}
+
+updateDashboard();
