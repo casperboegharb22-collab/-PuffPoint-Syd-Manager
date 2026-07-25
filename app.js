@@ -71,6 +71,7 @@ function renderInventory() {
       <p>Lager: ${product.stock}</p>
       <button onclick="addStock(${index})">+1</button>
       <button onclick="removeStock(${index})">-1</button>
+      <button onclick="sellProduct(${index})">Sælg</button>
     `;
 
     inventorySection.appendChild(card);
@@ -92,3 +93,23 @@ function removeStock(index) {
 }
 
 renderInventory();
+let revenue = 0;
+let profit = 0;
+
+function sellProduct(index) {
+  if (products[index].stock <= 0) {
+    alert("Ingen varer på lager!");
+    return;
+  }
+
+  products[index].stock--;
+
+  revenue += 150;
+  profit += (150 - 72);
+
+  document.getElementById("revenue").textContent = revenue + " kr.";
+  document.getElementById("profit").textContent = profit + " kr.";
+
+  renderInventory();
+  updateDashboard();
+}
