@@ -15,4 +15,26 @@ const products = [
     name: "Lemon Lime / Lush Ice",
     stock: 0
   }
-];
+,
+{
+  name: "Love 66 / Sour Apple",
+  stock: 0
+},
+{
+  name: "Mixed Berries / Watermelon Ice",
+  stock: 0
+},
+{
+  name: "Peach Ice / Blueberry Ice",
+  stock: 0
+},
+{
+  name: "Strawberry Kiwi / Blueberry Sour Raspberry",
+  stock: 0
+},
+{
+
+  name: "Summer Dream / Strawberry Banana",
+  stock: 0
+}
+  ];
