@@ -57,3 +57,38 @@ function updateDashboard() {
 }
 
 updateDashboard();
+const inventorySection = document.getElementById("inventory");
+
+function renderInventory() {
+  inventorySection.innerHTML = "";
+
+  products.forEach((product, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <h2>${product.name}</h2>
+      <p>Lager: ${product.stock}</p>
+      <button onclick="addStock(${index})">+1</button>
+      <button onclick="removeStock(${index})">-1</button>
+    `;
+
+    inventorySection.appendChild(card);
+  });
+}
+function addStock(index) {
+  products[index].stock++;
+  renderInventory();
+  updateDashboard();
+}
+
+function removeStock(index) {
+  if (products[index].stock > 0) {
+    products[index].stock--;
+  }
+
+  renderInventory();
+  updateDashboard();
+}
+
+renderInventory();
