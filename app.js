@@ -81,6 +81,7 @@ function addStock(index) {
   products[index].stock++;
   renderInventory();
   updateDashboard();
+  saveData();
 }
 
 function removeStock(index) {
@@ -109,6 +110,31 @@ function sellProduct(index) {
 
   document.getElementById("revenue").textContent = revenue + " kr.";
   document.getElementById("profit").textContent = profit + " kr.";
+
+  renderInventory();
+  updateDashboard();
+}
+function saveData() {
+  localStorage.setItem("products", JSON.stringify(products));
+  localStorage.setItem("revenue", revenue);
+  localStorage.setItem("profit", profit);
+}
+
+function loadData() {
+  const savedProducts = localStorage.getItem("products");
+  const savedRevenue = localStorage.getItem("revenue");
+  const savedProfit = localStorage.getItem("profit");
+
+  if (savedProducts) {
+    const loadedProducts = JSON.parse(savedProducts);
+
+    loadedProducts.forEach((item, index) => {
+      products[index].stock = item.stock;
+    });
+  }
+
+  if (savedRevenue) revenue = Number(savedRevenue);
+  if (savedProfit) profit = Number(savedProfit);
 
   renderInventory();
   updateDashboard();
