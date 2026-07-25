@@ -1,41 +1,89 @@
 <!DOCTYPE html>
-
 <html lang="da">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>PuffPoint Syd</title>
+<title>PuffPoint Syd Manager</title>
 
-<style>
+<link rel="stylesheet" href="styles.css">
+<link rel="manifest" href="manifest.json">
 
-body{
+<meta name="theme-color" content="#19c37d">
+</head>
 
-background:#111;
+<body>
 
-color:white;
+<header class="header">
+    <h1>PuffPoint Syd Manager</h1>
+</header>
 
-font-family:Arial,sans-serif;
+<main>
 
-display:flex;
+<section id="dashboard">
 
-justify-content:center;
+<div class="cards">
 
-align-items:center;
+<div class="card">
+<h2>Omsætning</h2>
+<p id="revenue">0 kr.</p>
+</div>
 
-height:100vh;
+<div class="card">
+<h2>Profit</h2>
+<p id="profit">0 kr.</p>
+</div>
 
-margin:0;
+<div class="card">
+<h2>På lager</h2>
+<p id="stock">0</p>
+</div>
 
-}
+<div class="card">
+<h2>Bestseller</h2>
+<p id="bestSeller">-</p>
+</div>
 
-.box{
+<div class="card">
+<h2>Genbestil</h2>
+<p id="restock">Ingen</p>
+</div>
 
-background:#1d1d1d;
+</div>
+<nav class="menu">
 
-padding:30px;
+<button>Dashboard</button>
 
-border-radius:20px;
+<button>Lager</button>
+
+<button>Salg</button>
+
+<button>Indkøb</button>
+
+<button>Statistik</button>
+
+</nav>
+
+<section class="content">
+
+<h2>Velkommen</h2>
+
+<p>
+PuffPoint Syd Manager er nu installeret.
+</p>
+
+<p>
+Næste skridt er at aktivere lager, salg,
+statistik og profitberegning.
+</p>
+
+</section>
+
+</section>
+
+</main>
+
+<script src="app.js"></script>
+
+</body>
+</html>
