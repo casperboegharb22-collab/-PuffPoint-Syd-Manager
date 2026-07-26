@@ -38,6 +38,9 @@ const products = [
   stock: 0
 }
   ];
+let revenue = 0;
+let profit = 0;
+
 const stockElement = document.getElementById("stock");
 const bestSellerElement = document.getElementById("bestSeller");
 const restockElement = document.getElementById("restock");
@@ -94,9 +97,6 @@ function removeStock(index) {
   updateDashboard();
   saveData();
 }
-
-let revenue = 0;
-let profit = 0;
 
 function sellProduct(index) {
   if (products[index].stock <= 0) {
