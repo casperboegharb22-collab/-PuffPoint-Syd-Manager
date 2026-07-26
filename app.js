@@ -53,7 +53,7 @@ function updateDashboard() {
   stockElement.textContent = totalStock;
   bestSellerElement.textContent = "-";
   restockElement.textContent = "Ingen";
-  profitElement.textContent = "0 kr.";
+  profitElement.textContent = profit + " kr.";
 }
 
 updateDashboard();
