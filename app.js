@@ -95,7 +95,6 @@ function removeStock(index) {
   saveData();
 }
 
-renderInventory();
 let revenue = 0;
 let profit = 0;
 
