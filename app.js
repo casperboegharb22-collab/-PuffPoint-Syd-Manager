@@ -87,10 +87,12 @@ function addStock(index) {
 function removeStock(index) {
   if (products[index].stock > 0) {
     products[index].stock--;
+    saveData();
   }
 
   renderInventory();
   updateDashboard();
+  saveData();
 }
 
 renderInventory();
@@ -113,6 +115,7 @@ function sellProduct(index) {
 
   renderInventory();
   updateDashboard();
+  saveData();
 }
 function saveData() {
   localStorage.setItem("products", JSON.stringify(products));
@@ -139,3 +142,4 @@ function loadData() {
   renderInventory();
   updateDashboard();
 }
+loadData();
