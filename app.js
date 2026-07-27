@@ -144,6 +144,7 @@ function addStock(index){
     products[index].stock += amount;
     saveData();
     renderProducts();
+    updateDashboard();
 
 }
 
@@ -166,6 +167,7 @@ function sellStock(index){
     products[index].sold += amount;
     saveData();
     renderProducts();
+    updateDashboard();
 
 }
 // Gem data
@@ -193,3 +195,30 @@ function loadData() {
 loadData();
 
 renderProducts();
+function updateDashboard() {
+
+    let revenue = 0;
+    let profit = 0;
+    let stock = 0;
+
+    products.forEach(product => {
+
+        revenue += product.sold * 150;
+        profit += product.sold * 78;
+        stock += product.stock;
+
+    });
+
+    document.getElementById("revenue").textContent =
+        revenue.toLocaleString("da-DK") + " kr.";
+
+    document.getElementById("profit").textContent =
+        profit.toLocaleString("da-DK") + " kr.";
+
+    document.getElementById("stock").textContent =
+        stock + " stk.";
+
+}
+loadData();
+renderProducts();
+updateDashboard();
