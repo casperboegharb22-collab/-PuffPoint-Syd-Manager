@@ -18,6 +18,9 @@ function showPage(pageId) {
     document
         .querySelector(`[data-page="${pageId}"]`)
         .classList.add("active");
+    if (pageId === "statistik") {
+    updateStatistics();
+}
 }
 
 navButtons.forEach(button => {
