@@ -219,6 +219,39 @@ function updateDashboard() {
         stock + " stk.";
 
 }
+function updateStatistics() {
+
+    let revenue = 0;
+    let profit = 0;
+    let sold = 0;
+    let bestSeller = "Ingen salg endnu";
+    let bestSold = 0;
+
+    products.forEach(product => {
+        revenue += product.sold * 150;
+        profit += product.sold * 78;
+        sold += product.sold;
+
+        if (product.sold > bestSold) {
+            bestSold = product.sold;
+            bestSeller = product.name;
+        }
+    });
+
+    document.getElementById("statsRevenue").textContent =
+        revenue.toLocaleString("da-DK") + " kr.";
+
+    document.getElementById("statsProfit").textContent =
+        profit.toLocaleString("da-DK") + " kr.";
+
+    document.getElementById("statsSold").textContent =
+        sold + " stk.";
+
+    document.getElementById("bestSeller").textContent =
+        bestSeller;
+
+}
 loadData();
 renderProducts();
 updateDashboard();
+updateStatistics();
