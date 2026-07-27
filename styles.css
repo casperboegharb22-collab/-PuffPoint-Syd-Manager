@@ -105,3 +105,111 @@ margin-top:5px;
 .bottom-nav button.active{
 color:#18c964;
 }
+/* Dashboard lister */
+
+#top3,
+#reorderList{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:15px;
+}
+
+.list-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 16px;
+background:#2a2a2d;
+border-radius:16px;
+}
+
+.list-item strong{
+font-size:16px;
+}
+
+.list-item span{
+font-size:15px;
+color:#bdbdbd;
+}
+
+/* Lager */
+
+#productList{
+display:flex;
+flex-direction:column;
+gap:18px;
+margin-top:20px;
+}
+
+.product-card{
+background:#1c1c1e;
+border-radius:22px;
+padding:20px;
+box-shadow:0 6px 20px rgba(0,0,0,.35);
+}
+
+.product-card h3{
+font-size:22px;
+margin-bottom:12px;
+}
+
+.stock{
+font-size:18px;
+font-weight:600;
+margin-bottom:18px;
+}
+
+.stock.green{
+color:#18c964;
+}
+
+.stock.yellow{
+color:#f7b500;
+}
+
+.stock.red{
+color:#ff453a;
+}
+
+.product-actions{
+display:flex;
+gap:10px;
+}
+
+.product-actions button{
+flex:1;
+border:none;
+border-radius:14px;
+padding:14px;
+font-size:15px;
+font-weight:600;
+cursor:pointer;
+transition:.2s;
+}
+
+.add-btn{
+background:#18c964;
+color:#fff;
+}
+
+.sell-btn{
+background:#ff453a;
+color:#fff;
+}
+
+.product-actions button:active{
+transform:scale(.97);
+}
+
+/* Sideoverskrifter */
+
+.page h2{
+margin-bottom:18px;
+}
+
+/* Lidt luft nederst */
+
+main{
+padding-bottom:100px;
+}
