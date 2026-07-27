@@ -1,54 +1,107 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
+}
+
 body{
-  margin:0;
-  background:#111;
-  color:white;
-  font-family:Arial,sans-serif;
+background:#121212;
+color:#ffffff;
+padding-bottom:90px;
 }
 
-header{
-  background:#00c853;
-  padding:20px;
-  text-align:center;
-  font-size:28px;
-  font-weight:bold;
+.header{
+padding:22px;
 }
 
-main{
-  padding:20px;
+.logo{
+display:flex;
+align-items:center;
+gap:16px;
 }
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:15px;
+
+.logo img{
+width:58px;
+height:58px;
+border-radius:18px;
+background:#1f1f1f;
+padding:10px;
+}
+
+.logo h1{
+font-size:28px;
+font-weight:700;
+}
+
+.logo p{
+color:#18c964;
+font-size:15px;
+margin-top:3px;
+}
+
+.page{
+display:none;
+padding:18px;
+}
+
+.page.active{
+display:block;
+}
+
+.stats-grid{
+display:grid;
+grid-template-columns:1fr;
+gap:16px;
 }
 
 .card{
-  background:#1f1f1f;
-  border-radius:12px;
-  padding:20px;
-  text-align:center;
-  border:1px solid #333;
+background:#1c1c1e;
+border-radius:22px;
+padding:20px;
+margin-bottom:18px;
+box-shadow:0 6px 20px rgba(0,0,0,.35);
 }
 
 .card h2{
-  margin:0 0 10px;
-  font-size:18px;
+font-size:30px;
+margin-top:10px;
 }
 
-.card p{
-  font-size:24px;
-  color:#00e676;
-  font-weight:bold;
-  button{
-  background:#00c853;
-  color:white;
-  border:none;
-  padding:12px 20px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:16px;
+.card h3{
+font-size:16px;
+color:#9a9a9a;
+font-weight:500;
 }
 
-button:hover{
-  background:#00b248;
+.bottom-nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:78px;
+background:#1c1c1e;
+display:flex;
+justify-content:space-around;
+align-items:center;
+border-top:1px solid #2d2d2d;
+}
+
+.bottom-nav button{
+background:none;
+border:none;
+color:#bdbdbd;
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:13px;
+cursor:pointer;
+}
+
+.bottom-nav button span{
+margin-top:5px;
+}
+
+.bottom-nav button.active{
+color:#18c964;
 }
