@@ -149,16 +149,17 @@ function renderPurchaseList() {
         purchaseList.innerHTML += `
             <div class="product-card">
                 <h3>${product.name}</h3>
+<div class="stock">
+    På lager: ${product.stock} stk.
+</div>
 
-                <div class="stock">
-                    På lager: ${product.stock} stk.
-                </div>
+<div class="product-actions">
+    <button class="add-btn" onclick="addStock(${index})">
+        📦 Tilføj varer
+    </button>
+</div>
 
-                <button class="add-btn"
-                    onclick="addStock(${index})">
-                    📦 Tilføj varer
-                </button>
-            </div>
+  </div>
         `;
 
     });
