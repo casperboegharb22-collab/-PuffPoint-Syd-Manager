@@ -71,9 +71,9 @@ function updateDashboard() {
       bestSold = product.sold;
       bestSeller = product.name;
     }
-
-    if (product.stock <= 3) {
-      restock.push(product.name);
+if (product.stock > 0 && product.stock <= 3) {
+  restock.push(`${product.name} (${product.stock})`);
+}
     }
   });
 
@@ -81,8 +81,12 @@ function updateDashboard() {
   revenueElement.textContent = revenue + " kr.";
   profitElement.textContent = profit + " kr.";
   bestSellerElement.textContent = bestSeller;
+  if (totalStock === 0) {
+  restockElement.textContent = "Lager tomt";
+} else {
   restockElement.textContent =
     restock.length ? restock.join(", ") : "Ingen";
+}
 }
 
 function renderInventory() {
