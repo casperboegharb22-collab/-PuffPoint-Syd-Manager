@@ -168,3 +168,28 @@ function sellStock(index){
     renderProducts();
 
 }
+// Gem data
+
+function saveData() {
+    localStorage.setItem("puffpointProducts", JSON.stringify(products));
+}
+
+// Hent data
+
+function loadData() {
+
+    const saved = localStorage.getItem("puffpointProducts");
+
+    if(saved){
+
+        products = JSON.parse(saved);
+
+    }
+
+}
+
+// Indlæs data ved opstart
+
+loadData();
+
+renderProducts();
