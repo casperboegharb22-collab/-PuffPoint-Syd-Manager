@@ -138,6 +138,34 @@ På lager: ${product.stock} stk.
 }
 
 renderProducts();
+function renderPurchaseList() {
+
+    const purchaseList = document.getElementById("purchaseList");
+
+    purchaseList.innerHTML = "";
+
+    products.forEach((product, index) => {
+
+        purchaseList.innerHTML += `
+            <div class="product-card">
+                <h3>${product.name}</h3>
+
+                <div class="stock">
+                    På lager: ${product.stock} stk.
+                </div>
+
+                <button class="add-btn"
+                    onclick="addStock(${index})">
+                    📦 Tilføj varer
+                </button>
+            </div>
+        `;
+
+    });
+
+}
+
+renderPurchaseList();
 function addStock(index){
 
     const amount = parseInt(prompt("Hvor mange vil du tilføje?"));
@@ -146,9 +174,10 @@ function addStock(index){
 
     products[index].stock += amount;
     saveData();
-    renderProducts();
-    updateDashboard();
-    updateStatistics();
+renderProducts();
+renderPurchaseList();
+updateDashboard();
+updateStatistics();
 
 }
 
