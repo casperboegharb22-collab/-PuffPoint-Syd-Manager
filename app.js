@@ -135,3 +135,36 @@ På lager: ${product.stock} stk.
 }
 
 renderProducts();
+function addStock(index){
+
+    const amount = parseInt(prompt("Hvor mange vil du tilføje?"));
+
+    if(isNaN(amount) || amount <= 0) return;
+
+    products[index].stock += amount;
+
+    renderProducts();
+
+}
+
+function sellStock(index){
+
+    const amount = parseInt(prompt("Hvor mange er solgt?"));
+
+    if(isNaN(amount) || amount <= 0) return;
+
+    if(amount > products[index].stock){
+
+        alert("Der er ikke nok på lager.");
+
+        return;
+
+    }
+
+    products[index].stock -= amount;
+
+    products[index].sold += amount;
+
+    renderProducts();
+
+}
