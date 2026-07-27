@@ -3,7 +3,6 @@ const COST_PRICE = 72;
 
 let revenue = 0;
 let profit = 0;
-
 const products = [
   {
     name: "Blue Razz Ice / Strawberry Watermelon Bubble Gum",
@@ -51,6 +50,7 @@ const products = [
     sold: 0
   }
 ];
+
 
 const stockElement = document.getElementById("stock");
 const bestSellerElement = document.getElementById("bestSeller");
