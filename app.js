@@ -145,6 +145,7 @@ function addStock(index){
     saveData();
     renderProducts();
     updateDashboard();
+    updateStatistics();
 
 }
 
@@ -168,6 +169,7 @@ function sellStock(index){
     saveData();
     renderProducts();
     updateDashboard();
+    updateStatistics();
 
 }
 // Gem data
