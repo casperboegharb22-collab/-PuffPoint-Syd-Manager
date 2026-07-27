@@ -142,7 +142,7 @@ function addStock(index){
     if(isNaN(amount) || amount <= 0) return;
 
     products[index].stock += amount;
-
+    saveData();
     renderProducts();
 
 }
@@ -164,7 +164,7 @@ function sellStock(index){
     products[index].stock -= amount;
 
     products[index].sold += amount;
-
+    saveData();
     renderProducts();
 
 }
