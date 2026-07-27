@@ -1,180 +1,36 @@
-const SALE_PRICE = 150;
-const COST_PRICE = 72;
+// PuffPoint Syd Manager V2
 
-let revenue = 0;
-let profit = 0;
-const products = [
-  {
-    name: "Blue Razz Ice / Strawberry Watermelon Bubble Gum",
-    stock: 0,
-    sold: 0
-  },
-  {
-    name: "Blueberry Ice / Love 66",
-    stock: 0,
-    sold: 0
-  },
-  {
-    name: "Strawberry Watermelon / Grape Ice",
-    stock: 0,
-    sold: 0
-  },
-  {
-    name: "Lemon Lime / Lush Ice",
-    stock: 0,
-    sold: 0
-  },
-  {
-    name: "Love 66 / Sour Apple",
-    stock: 0,
-    sold: 0
-  },
-  {
-    name: "Mixed Berries / Watermelon Ice",
-    stock: 0,
-    sold: 0
-  },
-  {
-    name: "Peach Ice / Blueberry Ice",
-    stock: 0,
-    sold: 0
-  },
-  {
-    name: "Strawberry Kiwi / Blueberry Sour Raspberry",
-    stock: 0,
-    sold: 0
-  },
-  {
-    name: "Summer Dream / Strawberry Banana",
-    stock: 0,
-    sold: 0
-  }
-];
+const pages = document.querySelectorAll(".page");
+const navButtons = document.querySelectorAll(".bottom-nav button");
 
+function showPage(pageId) {
 
-const stockElement = document.getElementById("stock");
-const bestSellerElement = document.getElementById("bestSeller");
-const restockElement = document.getElementById("restock");
-const profitElement = document.getElementById("profit");
-const revenueElement = document.getElementById("revenue");
-const inventorySection = document.getElementById("inventory");
-function updateDashboard() {
-  let totalStock = 0;
-  let bestSeller = "-";
-  let bestSold = 0;
-  let restock = [];
-
-  products.forEach(product => {
-    totalStock += product.stock;
-
-    if (product.sold > bestSold) {
-      bestSold = product.sold;
-      bestSeller = product.name;
-    }
-if (product.stock > 0 && product.stock <= 3) {
-  restock.push(`${product.name} (${product.stock})`);
-}
-    }
-  });
-
-  stockElement.textContent = totalStock;
-  revenueElement.textContent = revenue + " kr.";
-  profitElement.textContent = profit + " kr.";
-  bestSellerElement.textContent = bestSeller;
-  if (totalStock === 0) {
-  restockElement.textContent = "Lager tomt";
-} else {
-  restockElement.textContent =
-    restock.length ? restock.join(", ") : "Ingen";
-}
-}
-
-function renderInventory() {
-  inventorySection.innerHTML = "";
-
-  products.forEach((product, index) => {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `
-      <h2>${product.name}</h2>
-      <p>Lager: ${product.stock}</p>
-
-      <button onclick="addStock(${index})">+1</button>
-      <button onclick="removeStock(${index})">-1</button>
-      <button onclick="sellProduct(${index})">Sælg</button>
-    `;
-
-    inventorySection.appendChild(card);
-  });
-}
-
-function addStock(index) {
-  products[index].stock++;
-  saveData();
-  renderInventory();
-  updateDashboard();
-}
-
-function removeStock(index) {
-  if (products[index].stock > 0) {
-    products[index].stock--;
-  }
-
-  saveData();
-  renderInventory();
-  updateDashboard();
-}
-function sellProduct(index) {
-  if (products[index].stock <= 0) {
-    alert("Ingen varer på lager!");
-    return;
-  }
-
-  products[index].stock--;
-  products[index].sold++;
-
-  revenue += SALE_PRICE;
-  profit += (SALE_PRICE - COST_PRICE);
-
-  saveData();
-  renderInventory();
-  updateDashboard();
-}
-
-function saveData() {
-  localStorage.setItem("products", JSON.stringify(products));
-  localStorage.setItem("revenue", revenue);
-  localStorage.setItem("profit", profit);
-}
-
-function loadData() {
-  const savedProducts = localStorage.getItem("products");
-  const savedRevenue = localStorage.getItem("revenue");
-  const savedProfit = localStorage.getItem("profit");
-
-  if (savedProducts !== null) {
-    const loaded = JSON.parse(savedProducts);
-
-    loaded.forEach((item, index) => {
-      products[index].stock = item.stock;
-      products[index].sold = item.sold || 0;
+    pages.forEach(page => {
+        page.classList.remove("active");
     });
-  }
 
-  if (savedRevenue !== null) {
-    revenue = Number(savedRevenue);
-  }
+    navButtons.forEach(button => {
+        button.classList.remove("active");
+    });
 
-  if (savedProfit !== null) {
-    profit = Number(savedProfit);
-  }
+    document.getElementById(pageId).classList.add("active");
 
-  renderInventory();
-  updateDashboard();
+    document
+        .querySelector(`[data-page="${pageId}"]`)
+        .classList.add("active");
 }
 
-loadData();
-// Start appen
-renderInventory();
-updateDashboard();
+navButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const page = button.dataset.page;
+
+        showPage(page);
+
+    });
+
+});
+
+// Dashboard vises ved opstart
+showPage("dashboard");
