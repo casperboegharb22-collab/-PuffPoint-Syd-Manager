@@ -1,79 +1,118 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PuffPoint Syd Manager</title>
 
-<title>PuffPoint Syd Manager</title>
+    <meta name="theme-color" content="#18c964">
 
-<link rel="stylesheet" href="styles.css">
-<link rel="manifest" href="manifest.json">
-
-<meta name="theme-color" content="#19c37d">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
 <header class="header">
-    <h1>PuffPoint Syd Manager</h1>
+    <div class="logo">
+        <img src="logo.png" alt="PuffPoint Syd Logo">
+        <div>
+            <h1>PuffPoint Syd</h1>
+            <p>Manager</p>
+        </div>
+    </div>
 </header>
 
 <main>
 
-<section id="dashboard">
+    <!-- Dashboard -->
+    <section id="dashboard" class="page active">
 
-<div class="cards">
+        <div class="stats-grid">
 
-<div class="card">
-<h2>Omsætning</h2>
-<p id="revenue">0 kr.</p>
-</div>
+            <div class="card">
+                <h3>💰 Omsætning</h3>
+                <h2 id="revenue">0 kr.</h2>
+            </div>
 
-<div class="card">
-<h2>Profit</h2>
-<p id="profit">0 kr.</p>
-</div>
+            <div class="card">
+                <h3>📈 Profit</h3>
+                <h2 id="profit">0 kr.</h2>
+            </div>
 
-<div class="card">
-<h2>På lager</h2>
-<p id="stock">0</p>
-</div>
+            <div class="card">
+                <h3>📦 På lager</h3>
+                <h2 id="stock">0 stk.</h2>
+            </div>
 
-<div class="card">
-<h2>Bestseller</h2>
-<p id="bestSeller">-</p>
-</div>
+        </div>
 
-<div class="card">
-<h2>Genbestil</h2>
-<p id="restock">Ingen</p>
-</div>
+        <div class="card">
+            <h2>🏆 Top 3 Bestseller</h2>
+            <div id="top3"></div>
+        </div>
 
-</div>
-<nav class="menu">
+        <div class="card">
+            <h2>🔔 Genbestil</h2>
+            <div id="reorderList"></div>
+        </div>
 
-<button>Dashboard</button>
+    </section>
 
-<button>Lager</button>
+    <!-- Lager -->
+    <section id="lager" class="page">
+        <h2>Lager</h2>
+        <div id="productList"></div>
+    </section>
 
-<button>Salg</button>
+    <!-- Indkøb -->
+    <section id="indkob" class="page">
+        <h2>Indkøb</h2>
+        <div id="purchaseList"></div>
+    </section>
 
-<button>Indkøb</button>
+    <!-- Statistik -->
+    <section id="statistik" class="page">
+        <h2>Statistik</h2>
+        <div id="statistics"></div>
+    </section>
 
-<button>Statistik</button>
-
-</nav>
-
-<section class="content">
-<h2>Lager</h2>
-
-<div id="inventory"></div>
-
-</section>
-
-</section>
+    <!-- Indstillinger -->
+    <section id="settings" class="page">
+        <h2>Indstillinger</h2>
+        <div id="settingsContent"></div>
+    </section>
 
 </main>
+
+<nav class="bottom-nav">
+
+    <button data-page="dashboard">
+        🏠
+        <span>Dashboard</span>
+    </button>
+
+    <button data-page="lager">
+        📦
+        <span>Lager</span>
+    </button>
+
+    <button data-page="indkob">
+        🚚
+        <span>Indkøb</span>
+    </button>
+
+    <button data-page="statistik">
+        📊
+        <span>Statistik</span>
+    </button>
+
+    <button data-page="settings">
+        ⚙️
+        <span>Indstillinger</span>
+    </button>
+
+</nav>
 
 <script src="app.js"></script>
 
