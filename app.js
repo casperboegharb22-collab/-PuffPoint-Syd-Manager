@@ -203,6 +203,7 @@ function sellStock(index){
     renderProducts();
     updateDashboard();
     updateStatistics();
+    renderPurchaseList();
 
 }
 // Gem data
