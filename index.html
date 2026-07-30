@@ -5,142 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PuffPoint Syd Manager</title>
 
-    <meta name="theme-color" content="#18c964">
-
-    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-<header class="header">
-    <div class="logo">
-        <img src="logo.png" alt="PuffPoint Syd Logo">
-        <div>
-            <h1>PuffPoint Syd</h1>
-            <p>Manager</p>
-        </div>
-    </div>
-</header>
+<div class="app">
 
-<main>
+    <header class="header">
+        <h1>💨 PuffPoint Syd Manager</h1>
+    </header>
 
-    <!-- Dashboard -->
+    <nav class="nav">
+
+        <button class="nav-btn active" data-page="dashboard">
+            Dashboard
+        </button>
+
+        <button class="nav-btn" data-page="lager">
+            Lager
+        </button>
+
+        <button class="nav-btn" data-page="settings">
+            Indstillinger
+        </button>
+
+    </nav>
+
+    <!-- DASHBOARD -->
+
     <section id="dashboard" class="page active">
 
-        <div class="stats-grid">
+        <div class="cards">
 
             <div class="card">
-                <h3>💰 Omsætning</h3>
-                <h2 id="revenue">0 kr.</h2>
+                <h3>Omsætning</h3>
+                <span id="revenue">0 kr.</span>
             </div>
 
             <div class="card">
-                <h3>📈 Profit</h3>
-                <h2 id="profit">0 kr.</h2>
+                <h3>Fortjeneste</h3>
+                <span id="profit">0 kr.</span>
             </div>
 
             <div class="card">
-                <h3>📦 På lager</h3>
-                <h2 id="stock">0 stk.</h2>
+                <h3>Lager</h3>
+                <span id="stock">0 stk.</span>
             </div>
 
         </div>
 
-        <div class="card">
-            <h2>🏆 Top 3 Bestseller</h2>
-            <div id="top3"></div>
+        <div class="section">
+
+            <h2>🏆 Top 3 bestsellere</h2>
+
+            <div id="topProducts"></div>
+
         </div>
 
-        <div class="card">
-            <h2>🔔 Genbestil</h2>
-            <div id="reorderList"></div>
+        <div class="section">
+
+            <h2>⚠️ Lav lager</h2>
+
+            <div id="lowStock"></div>
+
         </div>
 
     </section>
 
-    <!-- Lager -->
+    <!-- LAGER -->
+
     <section id="lager" class="page">
-        <h2>Lager</h2>
+
+        <div class="section-header">
+
+            <h2>Produkter</h2>
+
+            <button id="addProductBtn">
+                + Produkt
+            </button>
+
+        </div>
+
         <div id="productList"></div>
+
     </section>
 
-    <!-- Indkøb -->
-   <section id="indkob" class="page">
-    <h2>Indkøb</h2>
+    <!-- INDSTILLINGER -->
 
-    <div id="purchaseList"></div>
+    <section id="settings" class="page">
 
-    <h3 style="margin-top:30px;">📜 Seneste indkøb</h3>
+        <div class="section">
 
-    <div id="purchaseHistory"></div>
+            <h2>Smage</h2>
 
-</section>
+            <button id="addFlavorBtn">
+                + Ny smag
+            </button>
 
-    <!-- Statistik -->
-    <section id="statistik" class="page">
-        <h2>Statistik</h2>
-        <div id="statistics">
+            <div id="flavorList"></div>
 
-    <div class="card">
-        <h3>💰 Samlet omsætning</h3>
-        <h1 id="statsRevenue">0 kr.</h1>
-    </div>
+        </div>
 
-    <div class="card">
-        <h3>📈 Samlet profit</h3>
-        <h1 id="statsProfit">0 kr.</h1>
-    </div>
+        <div class="section">
 
-    <div class="card">
-        <h3>📦 Solgte enheder</h3>
-        <h1 id="statsSold">0 stk.</h1>
-    </div>
+            <button id="resetDataBtn" class="danger">
+                Nulstil alle data
+            </button>
 
-    <div class="card">
-        <h3>🥇 Mest solgte smag</h3>
-        <h2 id="bestSeller">Ingen salg endnu</h2>
-    </div>
+        </div>
+
+    </section>
 
 </div>
-    </section>
-
-    <!-- Indstillinger -->
-    <section id="settings" class="page">
-        <h2>Indstillinger</h2>
-        <div id="settingsContent"></div>
-    </section>
-
-</main>
-
-<nav class="bottom-nav">
-
-    <button data-page="dashboard">
-        🏠
-        <span>Dashboard</span>
-    </button>
-
-    <button data-page="lager">
-        📦
-        <span>Lager</span>
-    </button>
-
-    <button data-page="indkob">
-        🚚
-        <span>Indkøb</span>
-    </button>
-
-    <button data-page="statistik">
-        📊
-        <span>Statistik</span>
-    </button>
-
-    <button data-page="settings">
-        ⚙️
-        <span>Indstillinger</span>
-    </button>
-
-</nav>
 
 <script src="app.js"></script>
 
