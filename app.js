@@ -40,8 +40,6 @@ function showPage(pageId){
 
 }
 
-}
-
 document.querySelectorAll(".nav-btn").forEach(button => {
 
     button.addEventListener("click", () => {
@@ -67,14 +65,12 @@ function updateDashboard(){
 
         stock += product.stock;
         totalSold += product.sold;
-
-
+});
     document.getElementById("stock").textContent =
         stock + " stk.";
 
     document.getElementById("totalSold").textContent =
         totalSold + " stk.";
-
 }
 
 updateDashboard();
