@@ -14,22 +14,31 @@ function saveData() {
 function formatPrice(value) {
     return value.toLocaleString("da-DK") + " kr.";
 }
+function showPage(pageId){
 
-function showPage(pageId) {
-
-    document.querySelectorAll(".page").forEach(page => {
+    document.querySelectorAll(".page").forEach(page=>{
+        page.style.display="none";
         page.classList.remove("active");
     });
 
-    document.querySelectorAll(".nav-btn").forEach(btn => {
+    const currentPage = document.getElementById(pageId);
+
+    if(currentPage){
+        currentPage.style.display="block";
+        currentPage.classList.add("active");
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn=>{
         btn.classList.remove("active");
     });
 
-    document.getElementById(pageId).classList.add("active");
+    const currentButton = document.querySelector(`[data-page="${pageId}"]`);
 
-    document
-        .querySelector(`[data-page="${pageId}"]`)
-        .classList.add("active");
+    if(currentButton){
+        currentButton.classList.add("active");
+    }
+
+}
 
 }
 
