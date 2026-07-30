@@ -171,9 +171,12 @@ document.getElementById("addProductBtn").onclick = function(){
 
     if(!name) return;
 
-    const flavor = prompt("Smag");
+    let flavor = "";
 
-    if(!flavor) return;
+if (data.flavors.length === 0) {
+    alert("Du skal først oprette en smag under Indstillinger.");
+    return;
+}
 
     const purchasePrice = Number(prompt("Indkøbspris"));
 
@@ -182,7 +185,23 @@ document.getElementById("addProductBtn").onclick = function(){
     const stock = Number(prompt("Lager"));
 
     const minStock = Number(prompt("Advarsel ved antal"));
+let options = "";
 
+data.flavors.forEach((item, index) => {
+    options += `${index + 1}. ${item}\n`;
+});
+
+const choice = Number(prompt("Vælg en smag:\n\n" + options));
+
+if (
+    isNaN(choice) ||
+    choice < 1 ||
+    choice > data.flavors.length
+) {
+    return;
+}
+
+flavor = data.flavors[choice - 1];
     data.products.push({
 
         name,
