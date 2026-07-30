@@ -1,215 +1,1053 @@
+/* ===================================================
+   PUFFPOINT SYD MANAGER V4
+   STYLES.CSS
+   DEL 1 - GRUNDDESIGN
+=================================================== */
+
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
-background:#121212;
-color:#ffffff;
-padding-bottom:90px;
+
+    background:#121212;
+
+    color:#ffffff;
+
+    min-height:100vh;
+
+    padding-bottom:110px;
+
+    -webkit-font-smoothing:antialiased;
+
 }
 
+/* ---------------- HEADER ---------------- */
+
 .header{
-padding:22px;
+
+    padding:24px;
+
 }
 
 .logo{
-display:flex;
-align-items:center;
-gap:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
 }
 
 .logo img{
-width:58px;
-height:58px;
-border-radius:18px;
-background:#1f1f1f;
-padding:10px;
+
+    width:62px;
+
+    height:62px;
+
+    border-radius:18px;
+
+    background:#1f1f1f;
+
+    padding:10px;
+
+    box-shadow:
+    0 0 18px rgba(24,201,100,.15);
+
 }
 
 .logo h1{
-font-size:28px;
-font-weight:700;
+
+    font-size:34px;
+
+    font-weight:800;
+
+    letter-spacing:-1px;
+
 }
 
 .logo p{
-color:#18c964;
-font-size:15px;
-margin-top:3px;
+
+    color:#18c964;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    margin-top:3px;
+
 }
 
+/* ---------------- PAGES ---------------- */
+
 .page{
-display:none;
-padding:18px;
+
+    display:none;
+
+    padding:22px;
+
+    animation:fadePage .25s ease;
+
 }
 
 .page.active{
-display:block;
+
+    display:block;
+
 }
+
+@keyframes fadePage{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(8px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ---------------- OVERSKRIFTER ---------------- */
+
+.page h2{
+
+    font-size:46px;
+
+    font-weight:800;
+
+    margin-bottom:22px;
+
+    letter-spacing:-1px;
+
+}
+
+/* ---------------- GRID ---------------- */
 
 .stats-grid{
-display:grid;
-grid-template-columns:1fr;
-gap:16px;
+
+    display:grid;
+
+    gap:18px;
+
 }
 
+/* ---------------- KORT ---------------- */
+
 .card{
-background:#1c1c1e;
-border-radius:22px;
-padding:20px;
-margin-bottom:18px;
-box-shadow:0 6px 20px rgba(0,0,0,.35);
+
+    background:#1c1c1e;
+
+    border-radius:24px;
+
+    padding:22px;
+
+    margin-bottom:18px;
+
+    border:1px solid transparent;
+
+    box-shadow:
+
+    0 10px 30px rgba(0,0,0,.35);
+
+    transition:
+
+    .20s;
+
+}
+
+.card:hover{
+
+    border-color:rgba(24,201,100,.40);
+
+    transform:translateY(-2px);
+
 }
 
 .card h2{
-font-size:30px;
-margin-top:10px;
+
+    font-size:38px;
+
+    font-weight:800;
+
+    margin-top:10px;
+
 }
 
 .card h3{
-font-size:16px;
-color:#9a9a9a;
-font-weight:500;
+
+    color:#9d9d9d;
+
+    font-size:17px;
+
+    font-weight:600;
+
 }
 
-.bottom-nav{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:78px;
-background:#1c1c1e;
-display:flex;
-justify-content:space-around;
-align-items:center;
-border-top:1px solid #2d2d2d;
+/* ---------------- KNAPPER ---------------- */
+
+button{
+
+    border:none;
+
+    border-radius:16px;
+
+    padding:14px 18px;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.18s;
+
 }
 
-.bottom-nav button{
-background:none;
-border:none;
-color:#bdbdbd;
-display:flex;
-flex-direction:column;
-align-items:center;
-font-size:13px;
-cursor:pointer;
+button:active{
+
+    transform:scale(.96);
+
 }
 
-.bottom-nav button span{
-margin-top:5px;
+/* ---------------- MAIN ---------------- */
+
+main{
+
+    padding-bottom:110px;
+
+}
+/* ===================================================
+   DEL 2 - DASHBOARD
+=================================================== */
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr;
+
+    gap:18px;
+
+    margin-bottom:22px;
+
 }
 
-.bottom-nav button.active{
-color:#18c964;
+.stats-grid .card{
+
+    background:linear-gradient(
+        180deg,
+        #232326,
+        #1b1b1d
+    );
+
 }
-/* Dashboard lister */
+
+.stats-grid .card h2{
+
+    font-size:36px;
+
+    margin-top:12px;
+
+    color:#ffffff;
+
+}
+
+.stats-grid .card h3{
+
+    color:#9b9b9b;
+
+    text-transform:uppercase;
+
+    font-size:13px;
+
+    letter-spacing:1px;
+
+}
 
 #top3,
 #reorderList{
-display:flex;
-flex-direction:column;
-gap:12px;
-margin-top:15px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+    margin-top:18px;
+
 }
 
 .list-item{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:14px 16px;
-background:#2a2a2d;
-border-radius:16px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    background:#2a2a2d;
+
+    border-radius:18px;
+
+    padding:16px;
+
+    transition:.2s;
+
+}
+
+.list-item:hover{
+
+    background:#313135;
+
+    transform:translateY(-1px);
+
 }
 
 .list-item strong{
-font-size:16px;
+
+    font-size:17px;
+
+    font-weight:700;
+
 }
 
 .list-item span{
-font-size:15px;
-color:#bdbdbd;
+
+    color:#bdbdbd;
+
+    font-size:15px;
+
 }
 
-/* Lager */
+#top3 .card{
 
-#productList{
-display:flex;
-flex-direction:column;
-gap:18px;
-margin-top:20px;
+    margin-bottom:0;
+
+    padding:16px;
+
+}
+
+#reorderList .card{
+
+    margin-bottom:0;
+
+    padding:16px;
+
+    border-left:5px solid #18c964;
+
+}
+/* ===================================================
+   DEL 3 - LAGER
+=================================================== */
+
+.product-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+    margin-top:18px;
+
 }
 
 .product-card{
-background:#1c1c1e;
-border-radius:22px;
-padding:20px;
-box-shadow:0 6px 20px rgba(0,0,0,.35);
+
+    background:#1d1d20;
+
+    border-radius:22px;
+
+    padding:18px;
+
+    border:1px solid rgba(255,255,255,.05);
+
+    transition:.2s;
+
+    box-shadow:
+    0 8px 24px rgba(0,0,0,.25);
+
 }
 
-.product-card h3{
-font-size:22px;
-margin-bottom:12px;
+.product-card:hover{
+
+    border-color:rgba(24,201,100,.35);
+
+    transform:translateY(-2px);
+
 }
 
-.stock{
-font-size:18px;
-font-weight:600;
-margin-bottom:18px;
+.product-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:14px;
+
 }
 
-.stock.green{
-color:#18c964;
+.product-name{
+
+    font-size:19px;
+
+    font-weight:700;
+
 }
 
-.stock.yellow{
-color:#f7b500;
+.product-stock{
+
+    font-size:15px;
+
+    color:#bdbdbd;
+
 }
 
-.stock.red{
-color:#ff453a;
+.stock-good{
+
+    color:#18c964;
+
+    font-weight:700;
+
+}
+
+.stock-medium{
+
+    color:#ffb020;
+
+    font-weight:700;
+
+}
+
+.stock-low{
+
+    color:#ff4d4f;
+
+    font-weight:700;
+
 }
 
 .product-actions{
-display:flex;
-gap:10px;
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:14px;
+
 }
 
-.product-actions button{
-flex:1;
-border:none;
-border-radius:14px;
-padding:14px;
-font-size:15px;
-font-weight:600;
-cursor:pointer;
-transition:.2s;
+.btn-add{
+
+    flex:1;
+
+    background:#18c964;
+
+    color:#fff;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    padding:15px;
+
+    border-radius:16px;
+
 }
 
-.add-btn{
-background:#18c964;
-color:#fff;
+.btn-add:hover{
+
+    background:#15b65a;
+
 }
 
-.sell-btn{
-background:#ff453a;
-color:#fff;
+.btn-remove{
+
+    flex:1;
+
+    background:#ff4d4f;
+
+    color:#fff;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    padding:15px;
+
+    border-radius:16px;
+
 }
 
-.product-actions button:active{
-transform:scale(.97);
+.btn-remove:hover{
+
+    background:#e03c3e;
+
 }
 
-/* Sideoverskrifter */
+.add-product{
 
-.page h2{
-margin-bottom:18px;
+    width:100%;
+
+    margin-top:22px;
+
+    padding:18px;
+
+    background:#18c964;
+
+    color:white;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    border-radius:18px;
+
 }
 
-/* Lidt luft nederst */
+.add-product:hover{
 
-main{
-padding-bottom:100px;
+    background:#15b65a;
+
+}
+
+input,
+select{
+
+    width:100%;
+
+    background:#232326;
+
+    color:white;
+
+    border:1px solid #333;
+
+    border-radius:16px;
+
+    padding:14px;
+
+    margin-top:10px;
+
+    margin-bottom:14px;
+
+    font-size:16px;
+
+}
+
+input:focus,
+select:focus{
+
+    outline:none;
+
+    border-color:#18c964;
+
+}
+/* ===================================================
+   DEL 4 - INDKØB & HISTORIK
+=================================================== */
+
+.purchase-form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+    margin-bottom:28px;
+
+}
+
+.purchase-card{
+
+    background:#1d1d20;
+
+    border-radius:22px;
+
+    padding:20px;
+
+    border:1px solid rgba(255,255,255,.05);
+
+    margin-bottom:18px;
+
+}
+
+.purchase-card h3{
+
+    font-size:20px;
+
+    margin-bottom:18px;
+
+}
+
+.purchase-btn{
+
+    width:100%;
+
+    background:#18c964;
+
+    color:white;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+}
+
+.purchase-btn:hover{
+
+    background:#15b65a;
+
+}
+
+.history-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+    margin-top:20px;
+
+}
+
+.history-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    background:#232326;
+
+    border-radius:18px;
+
+    padding:16px 18px;
+
+    transition:.2s;
+
+}
+
+.history-item:hover{
+
+    transform:translateY(-2px);
+
+    background:#2c2c30;
+
+}
+
+.history-left{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:4px;
+
+}
+
+.history-product{
+
+    font-size:17px;
+
+    font-weight:700;
+
+}
+
+.history-date{
+
+    font-size:13px;
+
+    color:#9b9b9b;
+
+}
+
+.history-right{
+
+    text-align:right;
+
+}
+
+.history-amount{
+
+    font-size:17px;
+
+    font-weight:700;
+
+}
+
+.history-price{
+
+    font-size:14px;
+
+    color:#18c964;
+
+}
+
+.empty-state{
+
+    text-align:center;
+
+    padding:35px 20px;
+
+    color:#8f8f8f;
+
+    border:2px dashed #333;
+
+    border-radius:20px;
+
+    margin-top:20px;
+
+}
+
+.empty-state h3{
+
+    margin-bottom:8px;
+
+    color:white;
+
+}
+/* ===================================================
+   DEL 5 - INDSTILLINGER
+=================================================== */
+
+.settings-container{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.settings-card{
+
+    background:#1d1d20;
+
+    border-radius:22px;
+
+    padding:22px;
+
+    border:1px solid rgba(255,255,255,.05);
+
+}
+
+.settings-card h3{
+
+    font-size:20px;
+
+    margin-bottom:8px;
+
+}
+
+.settings-card p{
+
+    color:#a8a8a8;
+
+    margin-bottom:18px;
+
+    line-height:1.5;
+
+}
+
+.settings-btn{
+
+    width:100%;
+
+    background:#18c964;
+
+    color:#fff;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    margin-top:10px;
+
+    transition:.2s;
+
+}
+
+.settings-btn:hover{
+
+    background:#15b65a;
+
+    transform:translateY(-2px);
+
+}
+
+.settings-btn.danger{
+
+    background:#ff4d4f;
+
+}
+
+.settings-btn.danger:hover{
+
+    background:#df3d40;
+
+}
+
+.settings-btn.secondary{
+
+    background:#2b2b2f;
+
+}
+
+.settings-btn.secondary:hover{
+
+    background:#35353a;
+
+}
+
+.settings-divider{
+
+    height:1px;
+
+    background:#333;
+
+    margin:10px 0;
+
+}
+
+.version-box{
+
+    text-align:center;
+
+    color:#8d8d8d;
+
+    font-size:14px;
+
+    padding-top:12px;
+
+}
+/* ===================================================
+   DEL 6 - BUNDMENU & FINISH
+=================================================== */
+
+.bottom-nav{
+
+    position:fixed;
+
+    left:16px;
+
+    right:16px;
+
+    bottom:16px;
+
+    display:flex;
+
+    justify-content:space-around;
+
+    align-items:center;
+
+    padding:12px;
+
+    background:rgba(28,28,30,.92);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:24px;
+
+    box-shadow:
+    0 10px 35px rgba(0,0,0,.45);
+
+    z-index:999;
+
+}
+
+.bottom-nav button{
+
+    flex:1;
+
+    background:transparent;
+
+    color:#8f8f8f;
+
+    border:none;
+
+    border-radius:16px;
+
+    padding:12px 8px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:6px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    transition:.2s;
+
+}
+
+.bottom-nav button i{
+
+    font-size:22px;
+
+}
+
+.bottom-nav button.active{
+
+    background:#18c964;
+
+    color:white;
+
+    transform:translateY(-2px);
+
+}
+
+.bottom-nav button:not(.active):hover{
+
+    background:rgba(255,255,255,.05);
+
+    color:white;
+
+}
+
+.fade-in{
+
+    animation:fadeIn .3s ease;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+.badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    min-width:22px;
+
+    height:22px;
+
+    padding:0 8px;
+
+    background:#18c964;
+
+    color:white;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#121212;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#333;
+
+    border-radius:999px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#555;
+
+}
+
+@media (max-width:480px){
+
+    .page{
+
+        padding:18px;
+
+    }
+
+    .logo h1{
+
+        font-size:28px;
+
+    }
+
+    .page h2{
+
+        font-size:34px;
+
+    }
+
+    .card{
+
+        padding:18px;
+
+    }
+
 }
