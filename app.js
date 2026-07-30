@@ -61,15 +61,19 @@ function updateDashboard(){
         formatPrice(data.profit);
 
     let stock = 0;
+    let totalSold = 0;
 
     data.products.forEach(product => {
 
         stock += product.stock;
+        totalSold += product.sold;
 
-    });
 
     document.getElementById("stock").textContent =
         stock + " stk.";
+
+    document.getElementById("totalSold").textContent =
+        totalSold + " stk.";
 
 }
 
