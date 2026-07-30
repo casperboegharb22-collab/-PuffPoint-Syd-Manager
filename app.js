@@ -1,314 +1,184 @@
-/* ==================================================
-   PUFFPOINT SYD MANAGER V4
-   APP.JS
-   DEL 1
-================================================== */
+const STORAGE_KEY = "puffpoint_syd_manager";
 
-// ---------- Storage ----------
-
-const STORAGE_KEY = "puffpoint_data_v4";
-
-// ---------- Standard data ----------
-
-const defaultData = {
-    products: [],
-    purchases: [],
+let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
     revenue: 0,
     profit: 0,
-    sold: 0
+    products: [],
+    flavors: []
 };
-
-// ---------- Hent data ----------
-
-let data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-
-if (!data) {
-    data = structuredClone(defaultData);
-    saveData();
-}
-
-// ---------- Gem ----------
 
 function saveData() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-// ---------- Navigation ----------
+function formatPrice(value) {
+    return value.toLocaleString("da-DK") + " kr.";
+}
 
-const pages = document.querySelectorAll(".page");
-const navButtons = document.querySelectorAll(".bottom-nav button");
+function showPage(pageId) {
 
-navButtons.forEach(button => {
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+    });
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+
+    document
+        .querySelector(`[data-page="${pageId}"]`)
+        .classList.add("active");
+
+}
+
+document.querySelectorAll(".nav-btn").forEach(button => {
 
     button.addEventListener("click", () => {
 
-        const page = button.dataset.page;
-
-        pages.forEach(p => p.classList.remove("active"));
-
-        document
-            .getElementById(page)
-            .classList.add("active");
-
-        navButtons.forEach(b => b.classList.remove("active"));
-
-        button.classList.add("active");
+        showPage(button.dataset.page);
 
     });
 
 });
 
-// Marker dashboard som aktiv
-
-navButtons[0].classList.add("active");
-
-// ---------- Formatter ----------
-
-function money(value) {
-    return Number(value).toLocaleString("da-DK") + " kr.";
-}
-
-// ---------- Beregn lager ----------
-
-function totalStock() {
-
-    return data.products.reduce((sum, product) => {
-
-        return sum + product.stock;
-
-    }, 0);
-
-}
-
-// ---------- Bestseller ----------
-
-function getBestSeller() {
-
-    if (data.products.length === 0) return "Ingen salg endnu";
-
-    const sorted = [...data.products]
-        .sort((a, b) => b.sold - a.sold);
-
-    if (!sorted[0] || sorted[0].sold === 0)
-        return "Ingen salg endnu";
-
-    return sorted[0].name;
-
-}
-
-// ---------- Initialisering ----------
-
-updateDashboard();
-renderProducts();
-renderPurchases();
-renderSettings();
-updateStatistics();
-/* ==================================================
-   APP.JS
-   DEL 2 - Dashboard & Statistik
-================================================== */
-
-function updateDashboard() {
+function updateDashboard(){
 
     document.getElementById("revenue").textContent =
-        money(data.revenue);
+        formatPrice(data.revenue);
 
     document.getElementById("profit").textContent =
-        money(data.profit);
+        formatPrice(data.profit);
+
+    let stock = 0;
+
+    data.products.forEach(product => {
+
+        stock += product.stock;
+
+    });
 
     document.getElementById("stock").textContent =
-        totalStock() + " stk.";
-
-    document.getElementById("statsRevenue").textContent =
-        money(data.revenue);
-
-    document.getElementById("statsProfit").textContent =
-        money(data.profit);
-
-    document.getElementById("statsSold").textContent =
-        data.sold + " stk.";
-
-    document.getElementById("bestSeller").textContent =
-        getBestSeller();
-
-    renderTop3();
-
-    renderReorder();
-}
-
-function updateStatistics() {
-
-    document.getElementById("statsRevenue").textContent =
-        money(data.revenue);
-
-    document.getElementById("statsProfit").textContent =
-        money(data.profit);
-
-    document.getElementById("statsSold").textContent =
-        data.sold + " stk.";
-
-    document.getElementById("bestSeller").textContent =
-        getBestSeller();
+        stock + " stk.";
 
 }
 
-function renderTop3() {
-
-    const container = document.getElementById("top3");
-
-    container.innerHTML = "";
-
-    const list = [...data.products]
-        .sort((a, b) => b.sold - a.sold)
-        .slice(0, 3);
-
-    if (list.length === 0) {
-
-        container.innerHTML =
-            '<div class="empty-state"><h3>Ingen produkter</h3></div>';
-
-        return;
-    }
-
-    list.forEach((product, index) => {
-
-        container.innerHTML += `
-            <div class="list-item">
-                <strong>#${index + 1} ${product.name}</strong>
-                <span>${product.sold} solgt</span>
-            </div>
-        `;
-
-    });
-
-}
-
-function renderReorder() {
-
-    const container = document.getElementById("reorderList");
-
-    container.innerHTML = "";
-
-    const lowStock = data.products.filter(product => product.stock <= 10);
-
-    if (lowStock.length === 0) {
-
-        container.innerHTML =
-            '<div class="empty-state"><h3>Alt ser godt ud 👍</h3></div>';
-
-        return;
-    }
-
-    lowStock.forEach(product => {
-
-        container.innerHTML += `
-            <div class="list-item">
-                <strong>${product.name}</strong>
-                <span>${product.stock} stk.</span>
-            </div>
-        `;
-
-    });
-
-}
-/* ==================================================
-   APP.JS
-   DEL 3 - Lager
-================================================== */
+updateDashboard();
+saveData();
+/* ==========================
+   DEL 4 - PRODUKTER
+========================== */
 
 function renderProducts() {
 
-    const container = document.getElementById("productList");
+    const list = document.getElementById("productList");
 
-    container.innerHTML = "";
+    list.innerHTML = "";
 
     if (data.products.length === 0) {
 
-        container.innerHTML = `
-            <div class="empty-state">
-                <h3>Ingen produkter endnu</h3>
-                <p>Tryk på knappen nedenfor for at oprette det første produkt.</p>
-            </div>
-        `;
+        list.innerHTML = "<p>Ingen produkter endnu.</p>";
 
-    } else {
-
-        data.products.forEach((product, index) => {
-
-            let stockClass = "stock-good";
-
-            if (product.stock <= 10) {
-                stockClass = "stock-low";
-            } else if (product.stock <= 25) {
-                stockClass = "stock-medium";
-            }
-
-            container.innerHTML += `
-                <div class="product-card fade-in">
-
-                    <div class="product-header">
-
-                        <div>
-                            <div class="product-name">${product.name}</div>
-
-                            <div class="product-stock ${stockClass}">
-                                Lager: ${product.stock} stk.
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="product-actions">
-
-                        <button class="btn-add"
-                            onclick="changeStock(${index},1)">
-                            +1
-                        </button>
-
-                        <button class="btn-remove"
-                            onclick="changeStock(${index},-1)">
-                            -1
-                        </button>
-
-                    </div>
-
-                </div>
-            `;
-
-        });
+        return;
 
     }
 
-    container.innerHTML += `
-        <button class="add-product" onclick="addProduct()">
-            + Opret nyt produkt
-        </button>
-    `;
+    data.products.forEach((product, index) => {
+
+        let status = "";
+
+        if(product.stock <= product.minStock){
+
+            status = "critical";
+
+        }else if(product.stock <= product.minStock + 5){
+
+            status = "low";
+
+        }
+
+        list.innerHTML += `
+
+        <div class="product-card ${status}">
+
+            <div class="product-top">
+
+                <div>
+
+                    <div class="product-name">${product.name}</div>
+
+                    <div class="product-flavor">${product.flavor}</div>
+
+                </div>
+
+                <strong>${product.stock} stk.</strong>
+
+            </div>
+
+            <div class="product-info">
+
+                <div class="info-box">
+                    Salg<br>${product.salePrice} kr.
+                </div>
+
+                <div class="info-box">
+                    Køb<br>${product.purchasePrice} kr.
+                </div>
+
+                <div class="info-box">
+                    Solgt<br>${product.sold}
+                </div>
+
+            </div>
+
+            <div class="product-actions">
+
+                <button class="sell-btn" onclick="sellProduct(${index})">
+                    Sælg
+                </button>
+
+                <button class="edit-btn" onclick="editProduct(${index})">
+                    Rediger
+                </button>
+
+                <button class="delete-btn" onclick="deleteProduct(${index})">
+                    Slet
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
 
 }
 
-function addProduct() {
+document.getElementById("addProductBtn").onclick = function(){
 
     const name = prompt("Produktnavn");
 
-    if (!name) return;
+    if(!name) return;
 
-    const purchasePrice = Number(prompt("Indkøbspris pr. stk."));
+    const flavor = prompt("Smag");
 
-    if (isNaN(purchasePrice)) return;
+    if(!flavor) return;
 
-    const salePrice = Number(prompt("Salgspris pr. stk."));
+    const purchasePrice = Number(prompt("Indkøbspris"));
 
-    if (isNaN(salePrice)) return;
+    const salePrice = Number(prompt("Salgspris"));
 
-    const stock = Number(prompt("Startlager"));
+    const stock = Number(prompt("Lager"));
 
-    if (isNaN(stock)) return;
+    const minStock = Number(prompt("Advarsel ved antal"));
 
     data.products.push({
 
         name,
+
+        flavor,
 
         purchasePrice,
 
@@ -316,294 +186,273 @@ function addProduct() {
 
         stock,
 
-        sold: 0
+        minStock,
+
+        sold:0
 
     });
 
     saveData();
 
-    renderProducts();
-
     updateDashboard();
-
-}
-
-function changeStock(index, amount) {
-
-    data.products[index].stock += amount;
-
-    if (data.products[index].stock < 0) {
-        data.products[index].stock = 0;
-    }
-
-    saveData();
 
     renderProducts();
 
-    updateDashboard();
+};
 
-}
-/* ==================================================
-   APP.JS
-   DEL 4 - Indkøb & Historik
-================================================== */
+renderProducts();
+/* ==========================
+   DEL 5 - SALG & DASHBOARD
+========================== */
 
-function renderPurchases() {
+function sellProduct(index){
 
-    const purchaseList = document.getElementById("purchaseList");
-    const history = document.getElementById("purchaseHistory");
+    const product = data.products[index];
 
-    purchaseList.innerHTML = "";
-    history.innerHTML = "";
-
-    if (data.products.length === 0) {
-
-        purchaseList.innerHTML = `
-            <div class="empty-state">
-                <h3>Ingen produkter</h3>
-                <p>Opret et produkt først.</p>
-            </div>
-        `;
-
-    } else {
-
-        purchaseList.innerHTML = `
-            <div class="purchase-card">
-
-                <h3>Registrer indkøb</h3>
-
-                <select id="purchaseProduct">
-                    ${data.products.map((p, i) =>
-                        `<option value="${i}">${p.name}</option>`
-                    ).join("")}
-                </select>
-
-                <input
-                    type="number"
-                    id="purchaseAmount"
-                    placeholder="Antal"
-                    min="1"
-                >
-
-                <button class="purchase-btn"
-                    onclick="registerPurchase()">
-                    Registrer indkøb
-                </button>
-
-            </div>
-        `;
-
-    }
-
-    if (data.purchases.length === 0) {
-
-        history.innerHTML = `
-            <div class="empty-state">
-                <h3>Ingen historik</h3>
-            </div>
-        `;
-
+    if(product.stock <= 0){
+        alert("Ikke flere på lager.");
         return;
     }
 
-    [...data.purchases]
-        .reverse()
-        .forEach(item => {
+    const amount = Number(prompt("Antal solgt", 1));
 
-            history.innerHTML += `
-                <div class="history-item">
+    if(!amount || amount <= 0) return;
 
-                    <div class="history-left">
-                        <div class="history-product">
-                            ${item.name}
-                        </div>
+    if(amount > product.stock){
+        alert("Der er ikke så mange på lager.");
+        return;
+    }
 
-                        <div class="history-date">
-                            ${item.date}
-                        </div>
-                    </div>
+    product.stock -= amount;
+    product.sold += amount;
 
-                    <div class="history-right">
-
-                        <div class="history-amount">
-                            +${item.amount} stk.
-                        </div>
-
-                        <div class="history-price">
-                            ${money(item.total)}
-                        </div>
-
-                    </div>
-
-                </div>
-            `;
-
-        });
-
-}
-
-function registerPurchase() {
-
-    const productIndex =
-        Number(document.getElementById("purchaseProduct").value);
-
-    const amount =
-        Number(document.getElementById("purchaseAmount").value);
-
-    if (!amount || amount <= 0) return;
-
-    const product = data.products[productIndex];
-
-    product.stock += amount;
-
-    data.purchases.push({
-
-        name: product.name,
-
-        amount,
-
-        total: amount * product.purchasePrice,
-
-        date: new Date().toLocaleDateString("da-DK")
-
-    });
+    data.revenue += amount * product.salePrice;
+    data.profit += amount * (product.salePrice - product.purchasePrice);
 
     saveData();
-
-    renderPurchases();
-
-    renderProducts();
-
     updateDashboard();
+    renderProducts();
+    renderTopProducts();
+    renderLowStock();
 
 }
-/* ==================================================
-   APP.JS
-   DEL 5 - Indstillinger
-================================================== */
 
-function renderSettings() {
+function deleteProduct(index){
 
-    const container = document.getElementById("settingsContent");
+    if(!confirm("Vil du slette produktet?")) return;
 
-    container.innerHTML = `
-        <div class="settings-container">
+    data.products.splice(index,1);
 
-            <div class="settings-card">
-                <h3>📦 Antal produkter</h3>
-                <p>${data.products.length} produkter oprettet</p>
-            </div>
+    saveData();
+    updateDashboard();
+    renderProducts();
+    renderTopProducts();
+    renderLowStock();
 
-            <div class="settings-card">
-                <h3>📜 Indkøbshistorik</h3>
-                <p>${data.purchases.length} registreringer</p>
-            </div>
+}
 
-            <div class="settings-card">
-                <h3>💾 Gemte data</h3>
+function editProduct(index){
 
-                <button class="settings-btn secondary"
-                    onclick="exportData()">
-                    Eksporter data
-                </button>
+    const product = data.products[index];
 
-                <button class="settings-btn danger"
-                    onclick="resetData()">
-                    Nulstil alle data
-                </button>
+    const stock = Number(prompt("Lager", product.stock));
 
-            </div>
+    if(!isNaN(stock))
+        product.stock = stock;
 
-            <div class="version-box">
-                PuffPoint Syd Manager V4
-            </div>
+    const sale = Number(prompt("Salgspris", product.salePrice));
 
+    if(!isNaN(sale))
+        product.salePrice = sale;
+
+    const buy = Number(prompt("Indkøbspris", product.purchasePrice));
+
+    if(!isNaN(buy))
+        product.purchasePrice = buy;
+
+    saveData();
+    updateDashboard();
+    renderProducts();
+    renderTopProducts();
+    renderLowStock();
+
+}
+
+function renderTopProducts(){
+
+    const box = document.getElementById("topProducts");
+
+    box.innerHTML = "";
+
+    const top = [...data.products]
+        .sort((a,b)=>b.sold-a.sold)
+        .slice(0,3);
+
+    if(top.length===0){
+
+        box.innerHTML="<p>Ingen salg endnu.</p>";
+
+        return;
+
+    }
+
+    top.forEach(product=>{
+
+        box.innerHTML += `
+        <div class="list-item">
+            <strong>${product.name}</strong><br>
+            ${product.flavor}<br>
+            Solgt: ${product.sold}
         </div>
-    `;
+        `;
 
-}
-
-function exportData() {
-
-    const file = new Blob(
-        [JSON.stringify(data, null, 2)],
-        { type: "application/json" }
-    );
-
-    const url = URL.createObjectURL(file);
-
-    const a = document.createElement("a");
-
-    a.href = url;
-    a.download = "puffpoint-backup.json";
-
-    document.body.appendChild(a);
-
-    a.click();
-
-    a.remove();
-
-    URL.revokeObjectURL(url);
-
-}
-
-function resetData() {
-
-    const ok = confirm(
-        "Er du sikker på, at du vil slette alle data?"
-    );
-
-    if (!ok) return;
-
-    localStorage.removeItem(STORAGE_KEY);
-
-    data = structuredClone(defaultData);
-
-    saveData();
-
-    renderProducts();
-    renderPurchases();
-    renderSettings();
-    updateDashboard();
-    updateStatistics();
-
-}
-/* ==================================================
-   APP.JS
-   DEL 6 - Afslutning
-================================================== */
-
-// ---------- Opdater alt ----------
-
-function refreshApp() {
-    saveData();
-    renderProducts();
-    renderPurchases();
-    renderSettings();
-    updateDashboard();
-    updateStatistics();
-}
-
-// ---------- Genopbyg visninger ----------
-
-refreshApp();
-
-// ---------- Gør funktioner globale ----------
-
-window.addProduct = addProduct;
-window.changeStock = changeStock;
-window.registerPurchase = registerPurchase;
-window.exportData = exportData;
-window.resetData = resetData;
-
-// ---------- Service Worker ----------
-
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker
-            .register("service-worker.js")
-            .catch(err => console.log("Service Worker:", err));
     });
+
 }
 
-console.log("✅ PuffPoint Syd Manager V4 startet");
+function renderLowStock(){
+
+    const box = document.getElementById("lowStock");
+
+    box.innerHTML="";
+
+    const low = data.products.filter(
+        product => product.stock <= product.minStock
+    );
+
+    if(low.length===0){
+
+        box.innerHTML="<p>Alt lager ser fint ud 👍</p>";
+
+        return;
+
+    }
+
+    low.forEach(product=>{
+
+        box.innerHTML += `
+        <div class="list-item">
+            ⚠️ ${product.name} (${product.flavor})<br>
+            ${product.stock} stk. tilbage
+        </div>
+        `;
+
+    });
+
+}
+
+renderTopProducts();
+renderLowStock();
+/* ==========================
+   DEL 6 - INDSTILLINGER
+========================== */
+
+function renderFlavors(){
+
+    const list = document.getElementById("flavorList");
+
+    list.innerHTML = "";
+
+    if(data.flavors.length === 0){
+
+        list.innerHTML = "<p>Ingen smage endnu.</p>";
+
+        return;
+
+    }
+
+    data.flavors.forEach((flavor,index)=>{
+
+        list.innerHTML += `
+            <div class="list-item">
+                <strong>${flavor}</strong>
+                <button class="delete-btn"
+                        onclick="deleteFlavor(${index})">
+                    Slet
+                </button>
+            </div>
+        `;
+
+    });
+
+}
+
+document.getElementById("addFlavorBtn").onclick = function(){
+
+    const flavor = prompt("Navn på smag");
+
+    if(!flavor) return;
+
+    if(data.flavors.includes(flavor)){
+
+        alert("Smagen findes allerede.");
+
+        return;
+
+    }
+
+    data.flavors.push(flavor);
+
+    saveData();
+
+    renderFlavors();
+
+};
+
+function deleteFlavor(index){
+
+    const flavor = data.flavors[index];
+
+    const used = data.products.some(
+        p => p.flavor === flavor
+    );
+
+    if(used){
+
+        alert("Smagen bruges af et produkt.");
+
+        return;
+
+    }
+
+    if(!confirm("Slet smagen?")) return;
+
+    data.flavors.splice(index,1);
+
+    saveData();
+
+    renderFlavors();
+
+}
+
+document.getElementById("resetDataBtn").onclick = function(){
+
+    if(!confirm("Vil du nulstille alle data?")) return;
+
+    data = {
+
+        revenue:0,
+
+        profit:0,
+
+        products:[],
+
+        flavors:[]
+
+    };
+
+    saveData();
+
+    updateDashboard();
+
+    renderProducts();
+
+    renderTopProducts();
+
+    renderLowStock();
+
+    renderFlavors();
+
+};
+
+renderFlavors();
