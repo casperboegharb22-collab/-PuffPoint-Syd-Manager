@@ -1,29 +1,35 @@
-/* =====================================================
+/* ==========================================================
    PUFFPOINT SYD MANAGER V3
    DEL 1 - GRUNDLAG
-===================================================== */
+========================================================== */
 
-const STORAGE_KEY = "puffpoint-manager";
+const STORAGE_KEY = "puffpoint_manager_v3";
 
-/* ---------- Data ---------- */
+/* ---------- Standard data ---------- */
+
+const defaultData = {
+
+    products: [],
+
+    purchases: [],
+
+    sales: [],
+
+    settings: {
+
+        lowStock: 10
+
+    }
+
+};
+
+/* ---------- Hent data ---------- */
 
 let data = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
 if (!data) {
 
-    data = {
-
-        products: [],
-        purchases: [],
-        sales: [],
-
-        settings: {
-
-            lowStock: 10
-
-        }
-
-    };
+    data = structuredClone(defaultData);
 
     saveData();
 
@@ -43,7 +49,7 @@ function saveData() {
 
 }
 
-/* ---------- Hjælpefunktion ---------- */
+/* ---------- Hjælpefunktioner ---------- */
 
 function $(id) {
 
@@ -65,6 +71,7 @@ function money(value) {
 /* ---------- Navigation ---------- */
 
 const pages = document.querySelectorAll(".page");
+
 const navButtons = document.querySelectorAll(".bottom-nav button");
 
 function showPage(pageId) {
@@ -81,15 +88,13 @@ function showPage(pageId) {
 
     });
 
-    document.getElementById(pageId).classList.add("active");
+    $(pageId).classList.add("active");
 
-    document.querySelector(
+    document
+        .querySelector(`[data-page="${pageId}"]`)
+        .classList.add("active");
 
-        `[data-page="${pageId}"]`
-
-    ).classList.add("active");
-
-    refreshPage(pageId);
+    refreshAll();
 
 }
 
@@ -103,43 +108,19 @@ navButtons.forEach(button => {
 
 });
 
-/* ---------- Opdater sider ---------- */
+/* ---------- Opdater hele app ---------- */
 
-function refreshPage(page) {
+function refreshAll() {
 
-    switch(page){
+    renderDashboard();
 
-        case "dashboard":
+    renderProducts();
 
-            renderDashboard();
+    renderPurchases();
 
-            break;
+    renderStatistics();
 
-        case "lager":
-
-            renderProducts();
-
-            break;
-
-        case "indkob":
-
-            renderPurchases();
-
-            break;
-
-        case "statistik":
-
-            renderStatistics();
-
-            break;
-
-        case "settings":
-
-            renderSettings();
-
-            break;
-
-    }
+    renderSettings();
 
 }
 
@@ -150,15 +131,15 @@ document.addEventListener("DOMContentLoaded", () => {
     showPage("dashboard");
 
 });
-/* =====================================================
+/* ==========================================================
    DEL 2 - DASHBOARD
-===================================================== */
+========================================================== */
 
 function renderDashboard() {
 
     let revenue = 0;
     let profit = 0;
-    let totalStock = 0;
+    let stock = 0;
 
     data.sales.forEach(sale => {
 
@@ -169,18 +150,35 @@ function renderDashboard() {
 
     data.products.forEach(product => {
 
-        totalStock += product.stock;
+        stock += Number(product.stock);
 
     });
 
-    $("revenue").textContent = money(revenue);
-    $("profit").textContent = money(profit);
-    $("stock").textContent = totalStock + " stk.";
+    if ($("revenue")) {
+
+        $("revenue").textContent = money(revenue);
+
+    }
+
+    if ($("profit")) {
+
+        $("profit").textContent = money(profit);
+
+    }
+
+    if ($("stock")) {
+
+        $("stock").textContent = stock + " stk.";
+
+    }
 
     renderTop3();
+
     renderReorder();
 
 }
+
+/* ---------- Top 3 ---------- */
 
 function renderTop3() {
 
@@ -202,32 +200,37 @@ function renderTop3() {
 
     }
 
-    const sold = {};
+    const salesMap = {};
 
     data.sales.forEach(sale => {
 
-        sold[sale.product] =
-            (sold[sale.product] || 0) + sale.quantity;
+        if (!salesMap[sale.product]) {
+
+            salesMap[sale.product] = 0;
+
+        }
+
+        salesMap[sale.product] += sale.quantity;
 
     });
 
-    const topProducts = Object.entries(sold)
+    const topProducts = Object.entries(salesMap)
 
-        .sort((a, b) => b[1] - a[1])
+        .sort((a,b)=>b[1]-a[1])
 
-        .slice(0, 3);
+        .slice(0,3);
 
-    topProducts.forEach(([name, amount], index) => {
+    const medals = ["🥇","🥈","🥉"];
 
-        const medal = ["🥇", "🥈", "🥉"][index];
+    topProducts.forEach((item,index)=>{
 
         container.innerHTML += `
 
             <div class="list-item">
 
-                <strong>${medal} ${name}</strong>
+                <strong>${medals[index]} ${item[0]}</strong>
 
-                <span>${amount} stk.</span>
+                <span>${item[1]} stk.</span>
 
             </div>
 
@@ -236,6 +239,8 @@ function renderTop3() {
     });
 
 }
+
+/* ---------- Genbestilling ---------- */
 
 function renderReorder() {
 
@@ -247,27 +252,23 @@ function renderReorder() {
 
     const lowProducts = data.products.filter(product =>
 
-        product.stock <= data.settings.lowStock
+        Number(product.stock) <= data.settings.lowStock
 
     );
 
     if (lowProducts.length === 0) {
 
         container.innerHTML = `
-
             <div class="list-item">
-
-                ✅ Lageret ser godt ud.
-
+                ✅ Alt ser fint ud.
             </div>
-
         `;
 
         return;
 
     }
 
-    lowProducts.forEach(product => {
+    lowProducts.forEach(product=>{
 
         container.innerHTML += `
 
@@ -284,12 +285,9 @@ function renderReorder() {
     });
 
 }
-/* =====================================================
+/* ==========================================================
    DEL 3 - LAGER
-===================================================== */
-
-let searchFilter = "";
-let sortBy = "name";
+========================================================== */
 
 function renderProducts() {
 
@@ -297,136 +295,364 @@ function renderProducts() {
 
     if (!container) return;
 
-    let products = [...data.products];
-
-    if (searchFilter !== "") {
-
-        products = products.filter(product =>
-            product.name.toLowerCase().includes(searchFilter.toLowerCase())
-        );
-
-    }
-
-    switch (sortBy) {
-
-        case "stockLow":
-            products.sort((a, b) => a.stock - b.stock);
-            break;
-
-        case "stockHigh":
-            products.sort((a, b) => b.stock - a.stock);
-            break;
-
-        default:
-            products.sort((a, b) => a.name.localeCompare(b.name));
-
-    }
-
     container.innerHTML = "";
 
-    container.innerHTML += `
+    if (data.products.length === 0) {
 
-        <div class="card">
-
-            <input
-                id="searchProduct"
-                placeholder="🔍 Søg produkt..."
-                oninput="searchProducts(this.value)">
-
-            <select onchange="changeSort(this.value)">
-
-                <option value="name">A-Å</option>
-                <option value="stockHigh">Mest lager</option>
-                <option value="stockLow">Mindst lager</option>
-
-            </select>
-
-            <button class="add-product"
-                onclick="showAddProduct()">
-
-                ➕ Tilføj produkt
-
-            </button>
-
-        </div>
-
-    `;
-
-    if (products.length === 0) {
-
-        container.innerHTML += `
-
+        container.innerHTML = `
             <div class="card">
-
-                <h3>Ingen produkter endnu</h3>
-
-                <p>Tryk på "Tilføj produkt".</p>
-
+                Ingen produkter endnu.
             </div>
-
         `;
 
         return;
 
     }
 
-    products.forEach(product => {
+    data.products.forEach((product, index) => {
 
-        let status = "🟢";
+        const status =
+            Number(product.stock) <= data.settings.lowStock
+                ? "🔴 Lav lager"
+                : "🟢 På lager";
 
-        if (product.stock <= data.settings.lowStock) {
+        container.innerHTML += `
+            <div class="product-card">
 
-            status = "🔴";
+                <h3>${product.name}</h3>
 
-        } else if (product.stock <= data.settings.lowStock * 2) {
+                <p><strong>Lager:</strong> ${product.stock} stk.</p>
 
-            status = "🟡";
+                <p><strong>Indkøb:</strong> ${money(product.purchasePrice)}</p>
+
+                <p><strong>Salgspris:</strong> ${money(product.salePrice)}</p>
+
+                <p>${status}</p>
+
+                <div class="product-buttons">
+
+                    <button onclick="editProduct(${index})">
+                        Rediger
+                    </button>
+
+                    <button onclick="deleteProduct(${index})">
+                        Slet
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+    });
+
+}
+
+/* ---------- Tilføj produkt ---------- */
+
+function addProduct() {
+
+    const name = prompt("Produktnavn");
+
+    if (!name) return;
+
+    const purchasePrice = Number(prompt("Indkøbspris"));
+
+    if (isNaN(purchasePrice)) return;
+
+    const salePrice = Number(prompt("Salgspris"));
+
+    if (isNaN(salePrice)) return;
+
+    const stock = Number(prompt("Start lager"));
+
+    if (isNaN(stock)) return;
+
+    data.products.push({
+
+        name,
+
+        purchasePrice,
+
+        salePrice,
+
+        stock
+
+    });
+
+    saveData();
+
+    refreshAll();
+
+}
+
+/* ---------- Rediger ---------- */
+
+function editProduct(index) {
+
+    const product = data.products[index];
+
+    const name = prompt("Produktnavn", product.name);
+
+    if (!name) return;
+
+    const purchasePrice = Number(
+        prompt("Indkøbspris", product.purchasePrice)
+    );
+
+    const salePrice = Number(
+        prompt("Salgspris", product.salePrice)
+    );
+
+    const stock = Number(
+        prompt("Lager", product.stock)
+    );
+
+    product.name = name;
+    product.purchasePrice = purchasePrice;
+    product.salePrice = salePrice;
+    product.stock = stock;
+
+    saveData();
+
+    refreshAll();
+
+}
+
+/* ---------- Slet ---------- */
+
+function deleteProduct(index) {
+
+    if (!confirm("Slet produkt?")) return;
+
+    data.products.splice(index, 1);
+
+    saveData();
+
+    refreshAll();
+
+}
+/* ==========================================================
+   DEL 4 - INDKØB & SALG
+========================================================== */
+
+function renderPurchases() {
+
+    const container = $("purchaseList");
+    const history = $("purchaseHistory");
+
+    if (!container || !history) return;
+
+    container.innerHTML = "";
+    history.innerHTML = "";
+
+    if (data.products.length === 0) {
+
+        container.innerHTML = `
+            <div class="card">
+                Ingen produkter oprettet.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    data.products.forEach((product, index) => {
+
+        container.innerHTML += `
+            <div class="product-card">
+
+                <h3>${product.name}</h3>
+
+                <p>Lager: ${product.stock} stk.</p>
+
+                <button onclick="buyStock(${index})">
+                    Køb lager
+                </button>
+
+                <button onclick="sellProduct(${index})">
+                    Registrer salg
+                </button>
+
+            </div>
+        `;
+
+    });
+
+    if (data.purchases.length === 0) {
+
+        history.innerHTML = `
+            <div class="card">
+                Ingen historik endnu.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    [...data.purchases].reverse().forEach(item => {
+
+        history.innerHTML += `
+            <div class="card">
+                <strong>${item.type}</strong><br>
+                ${item.product}<br>
+                ${item.quantity} stk.
+            </div>
+        `;
+
+    });
+
+}
+
+/* ---------- Køb lager ---------- */
+
+function buyStock(index) {
+
+    const quantity = Number(prompt("Antal købt"));
+
+    if (!quantity || quantity <= 0) return;
+
+    data.products[index].stock += quantity;
+
+    data.purchases.push({
+
+        type: "Indkøb",
+        product: data.products[index].name,
+        quantity
+
+    });
+
+    saveData();
+
+    refreshAll();
+
+}
+
+/* ---------- Registrer salg ---------- */
+
+function sellProduct(index) {
+
+    const quantity = Number(prompt("Antal solgt"));
+
+    if (!quantity || quantity <= 0) return;
+
+    if (quantity > data.products[index].stock) {
+
+        alert("Ikke nok på lager.");
+
+        return;
+
+    }
+
+    data.products[index].stock -= quantity;
+
+    const revenue = quantity * data.products[index].salePrice;
+
+    const cost = quantity * data.products[index].purchasePrice;
+
+    data.sales.push({
+
+        product: data.products[index].name,
+        quantity,
+        total: revenue,
+        profit: revenue - cost
+
+    });
+
+    data.purchases.push({
+
+        type: "Salg",
+        product: data.products[index].name,
+        quantity
+
+    });
+
+    saveData();
+
+    refreshAll();
+
+}
+/* ==========================================================
+   DEL 5 - STATISTIK
+========================================================== */
+
+function renderStatistics() {
+
+    if (!$("statsRevenue")) return;
+
+    let revenue = 0;
+    let profit = 0;
+    let sold = 0;
+
+    data.sales.forEach(sale => {
+
+        revenue += sale.total;
+        profit += sale.profit;
+        sold += sale.quantity;
+
+    });
+
+    $("statsRevenue").textContent = money(revenue);
+    $("statsProfit").textContent = money(profit);
+    $("statsSold").textContent = sold + " stk.";
+
+    renderBestSeller();
+
+}
+
+/* ---------- Bestseller ---------- */
+
+function renderBestSeller() {
+
+    const container = $("bestSeller");
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (data.sales.length === 0) {
+
+        container.innerHTML = `
+            <div class="card">
+                Ingen salg endnu.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    const counter = {};
+
+    data.sales.forEach(sale => {
+
+        if (!counter[sale.product]) {
+
+            counter[sale.product] = 0;
 
         }
 
+        counter[sale.product] += sale.quantity;
+
+    });
+
+    const sorted = Object.entries(counter)
+
+        .sort((a, b) => b[1] - a[1]);
+
+    sorted.forEach((item, index) => {
+
         container.innerHTML += `
 
-            <div class="product-card">
+            <div class="card">
 
-                <div class="product-header">
+                <strong>#${index + 1}</strong><br>
 
-                    <div>
+                ${item[0]}<br>
 
-                        <div class="product-name">
-
-                            ${product.name}
-
-                        </div>
-
-                        <div class="product-stock">
-
-                            ${status} ${product.stock} stk.
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="product-actions">
-
-                    <button
-                        class="btn-add"
-                        onclick="addStock('${product.name}')">
-
-                        + Lager
-
-                    </button>
-
-                    <button
-                        class="btn-remove"
-                        onclick="removeStock('${product.name}')">
-
-                        - Lager
-
-                    </button>
-
-                </div>
+                Solgt: ${item[1]} stk.
 
             </div>
 
@@ -435,84 +661,82 @@ function renderProducts() {
     });
 
 }
+/* ==========================================================
+   DEL 6 - INDSTILLINGER
+========================================================== */
 
-function searchProducts(value) {
+function renderSettings() {
 
-    searchFilter = value;
+    const container = $("settingsContent");
 
-    renderProducts();
+    if (!container) return;
+
+    container.innerHTML = `
+
+        <div class="card">
+
+            <h3>Lav lager grænse</h3>
+
+            <p>Nuværende: <strong>${data.settings.lowStock}</strong> stk.</p>
+
+            <button onclick="changeLowStock()">
+                Rediger
+            </button>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Sikkerhed</h3>
+
+            <button onclick="resetAllData()">
+                Nulstil alle data
+            </button>
+
+        </div>
+
+    `;
 
 }
 
-function changeSort(value) {
+/* ---------- Lav lager ---------- */
 
-    sortBy = value;
+function changeLowStock() {
 
-    renderProducts();
+    const value = Number(
 
-}
+        prompt(
 
-function addStock(name) {
+            "Ny grænse",
 
-    const product = data.products.find(p => p.name === name);
+            data.settings.lowStock
 
-    if (!product) return;
+        )
 
-    product.stock++;
+    );
+
+    if (isNaN(value) || value < 0) return;
+
+    data.settings.lowStock = value;
 
     saveData();
 
-    renderProducts();
-    renderDashboard();
-    renderStatistics();
+    refreshAll();
 
 }
 
-function removeStock(name) {
+/* ---------- Nulstil ---------- */
 
-    const product = data.products.find(p => p.name === name);
+function resetAllData() {
 
-    if (!product) return;
+    if (!confirm("Er du sikker? Alle data slettes.")) return;
 
-    if (product.stock > 0) {
+    localStorage.removeItem(STORAGE_KEY);
 
-        product.stock--;
-
-    }
+    data = structuredClone(defaultData);
 
     saveData();
 
-    renderProducts();
-    renderDashboard();
-    renderStatistics();
-
-}
-
-function showAddProduct() {
-
-    const name = prompt("Produktnavn:");
-
-    if (!name) return;
-
-    const stock = Number(prompt("Antal på lager:") || 0);
-
-    const costPrice = Number(prompt("Indkøbspris:") || 0);
-
-    const salePrice = Number(prompt("Salgspris:") || 0);
-
-    data.products.push({
-
-        name,
-        stock,
-        costPrice,
-        salePrice
-
-    });
-
-    saveData();
-
-    renderProducts();
-    renderDashboard();
-    renderStatistics();
+    refreshAll();
 
 }
